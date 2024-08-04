@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
-const ErrorPage = lazy(() => import('./pages/ErrorPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const HomePage = lazy(() => import('./pages/HomePage'))
 
 export default function Router() {
@@ -8,7 +8,7 @@ export default function Router() {
     <Suspense fallback={<p>loading...</p>}>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   )
