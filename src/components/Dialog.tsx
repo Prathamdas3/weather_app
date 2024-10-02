@@ -1,116 +1,42 @@
-import { X } from '@tamagui/lucide-icons'
-import {
-    Adapt,
-    Button,
-    Dialog,
-    Fieldset,
-    Input,
-    Label,
-    Paragraph,
-    Sheet,
-    TooltipSimple,
-    Unspaced,
-    XStack,
-} from 'tamagui'
-// import { SelectDemoItem } from './SelectDemo'
+import { useState } from 'react';
+import { View, Modal, TextInput, TouchableOpacity, Text } from 'react-native'
+import { useCity, useModal } from '@/store';
 
-export function DialogDemo() {
-    return <DialogInstance />
+export default function Dialog() {
+  const modalVisible = useModal((state) => state.modalVisible)
+  const setModalVisible = useModal((state) => state.setModalVisible)
+  const [value, setValue] = useState<string>('')
+  const setCity = useCity((state) => state.addCity)
+ 
+  const onPress=()=>{
+    if(value.length>0){
+      setCity(value)
+      setModalVisible()
+      setValue('')
+    }
+  }
+
+
+  return <Modal
+    animationType="fade"
+    transparent={true}
+    visible={modalVisible}
+    statusBarTranslucent={true}
+    onRequestClose={() => {
+      setModalVisible();
+    }}
+  >
+    <View className='flex justify-center h-screen '>
+      <View className='bg-white p-4 mx-3 rounded-xl blur-2xl'>
+
+        <View className='m-4 space-y-2'>
+          <TextInput value={value} onChangeText={setValue} className='mb-4 h-13  border p-3  rounded-lg' placeholder='Add city name to check weather' />
+          <TouchableOpacity onPress={onPress } accessibilityRole='button' className='flex flex-row justify-center p-3 bg-green-500 rounded-xl'><Text className='font-semibold text-xl text-white'>Submit</Text></TouchableOpacity>
+          <TouchableOpacity accessibilityRole='button' className='flex flex-row justify-center p-3 bg-red-500 rounded-xl' onPress={setModalVisible}><Text className='font-semibold text-xl text-white'>Close</Text></TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  </Modal>
+
 }
-function DialogInstance() {
-    return (
-        <Dialog modal>
-            <Dialog.Trigger asChild>
-                <Button>Select Your city</Button>
-            </Dialog.Trigger>
-            <Adapt when="sm" platform="touch">
 
-                <Sheet animation="medium" zIndex={200000} modal dismissOnSnapToBottom>
-
-                    <Sheet.Frame padding="$4" gap="$4">
-
-                        <Adapt.Contents />
-
-                    </Sheet.Frame>
-
-                    <Sheet.Overlay
-                        animation="lazy"
-                        enterStyle={{ opacity: 0 }}
-                        exitStyle={{ opacity: 0 }}
-                    />
-
-                </Sheet>
-
-            </Adapt>
-            <Dialog.Portal>
-
-                <Dialog.Overlay
-                    key="overlay"
-                    animation="slow"
-                    opacity={0.5}
-                    enterStyle={{ opacity: 0 }}
-                    exitStyle={{ opacity: 0 }}
-                />
-                <Dialog.Content
-                    bordered
-                    elevate
-                    key="content"
-                    animateOnly={['transform', 'opacity']}
-                    animation={[
-                        'quicker',
-                        {
-                            opacity: {
-                                overshootClamping: true,
-                            },
-                        },
-                    ]}
-                    enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
-                    exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
-                    gap="$4"
-                >
-
-                    <Dialog.Title>Edit profile</Dialog.Title>
-
-                    <Dialog.Description>
-
-                        Make changes to your profile here. Click save when you're done.
-
-                    </Dialog.Description>
-
-                    <Fieldset gap="$4" horizontal>
-
-                        <Label width={160} justifyContent="flex-end" htmlFor="name">
-
-                            Name
-
-                        </Label>
-
-                        <Input flex={1} id="name" defaultValue="Nate Wienert" />
-
-                    </Fieldset>
-
-                    <XStack alignSelf="flex-end" gap="$4">
-                        <DialogInstance />
-                        <Dialog.Close displayWhenAdapted asChild>
-                            <Button theme="active" aria-label="Close">
-                                Save changes
-                            </Button>
-                        </Dialog.Close>
-                    </XStack>
-                    <Unspaced>
-                        <Dialog.Close asChild>
-                            <Button
-                                position="absolute"
-                                top="$3"
-                                right="$3"
-                                size="$2"
-                                circular
-                                icon={X}
-                            />
-                        </Dialog.Close>
-                    </Unspaced>
-                </Dialog.Content>
-            </Dialog.Portal>
-        </Dialog>
-    )
-}

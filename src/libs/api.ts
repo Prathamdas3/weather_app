@@ -24,6 +24,7 @@ export async function getWeatherDataByCityName({ cityName }: { cityName: string 
 export async function getData() {
     try {
         const data = await AsyncStorage.getItem('cities')
+       
         if (data !== null) {
             return JSON.parse(data)
         }
@@ -35,9 +36,16 @@ export async function getData() {
 
 export async function storeData(value: string) {
     try {
-        
         await AsyncStorage.setItem('cities', value)
     } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function RemoveData(){
+    try{
+        await AsyncStorage.removeItem('cities')
+    }catch(error){
         console.log(error)
     }
 }

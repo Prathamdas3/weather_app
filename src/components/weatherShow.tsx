@@ -1,28 +1,42 @@
-import { View, Text } from 'react-native'
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
-import { getWeatherDataByCityName } from '@/libs/api'
+import { View, Text, FlatList, Image, StyleSheet, useColorScheme } from "react-native"
+import ForcustItem from "@/components/Forcust";
 
+export type WeatherData = {
+    weather: {
+        weather: { icon: string; main: string }[];
+        name: string;
+        main: { temp: number };
+    };
+    forcust: { list: { dt: string }[] };
+}
 
-export default function weatherData({ cityName }: { cityName: string }) {
-    const [weatherData, setWeatherData] = useState<string>('')
+export default function ShowWeather({ weatherData }: { weatherData: WeatherData }) {
+    const colorScheme=useColorScheme()
+    if (!weatherData.forcust.list.length) return <View><Text>Hellow t</Text></View>
 
-    const { data, isLoading, error } = useQuery({ queryKey: ["cityWeatherData", cityName], queryFn: async () => await getWeatherDataByCityName({ cityName }), enabled: !!cityName })
-
-    useEffect(() => {
-        setWeatherData(JSON.stringify(data))
-    }, [data])
-
-    if (error) {
-        return <View>
-            <Text>{error.message}</Text>
+    return (<View className=" w-screen flex justify-center ">
+        <View className="flex items-center h-[45%] justify-center">
+            <View className="flex flex-row items-center" >
+                <Image source={{ uri: `https://openweathermap.org/img/wn/${weatherData?.weather.weather[0].icon}@2x.png` }}
+                    style={styles.image}
+                />
+            </View>
+            <Text className={`text-5xl font-bold text-center font-mono tracking-tighter mb-2 text-${colorScheme == 'dark' ? 'white' : 'black'}`} style={styles.name}>{weatherData?.weather.name}</Text>
+            <Text className={`text-${colorScheme == 'dark' ? 'white' : 'black'} text-2xl font-normal`}> {weatherData?.weather?.main?.temp ?? 'N/A'}{'\u00B0'}C</Text>
         </View>
-    }
 
-    return (<View>
-        {
-            isLoading ? <Text>Getting your weather data</Text> : <Text>{weatherData}</Text>
-        }
+        <FlatList data={weatherData?.forcust.list ?? []} renderItem={({ item }) => <ForcustItem data={item} />} keyExtractor={item => item.dt} className="  p-4" scrollEnabled />
+
     </View>)
 }
+
+const styles = StyleSheet.create({
+    image: {
+        height: 100,
+        width: 100,
+        resizeMode: 'cover'
+    },
+    name: {
+        letterSpacing: 4
+    },
+})
