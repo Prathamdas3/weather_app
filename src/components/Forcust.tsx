@@ -1,8 +1,9 @@
 import { View, Text, Image, StyleSheet } from 'react-native'
-import { useColorScheme } from 'react-native';
+import { useChangeColorTheme } from '@/store';
 
 export default function ForcustItem({ data }: { data: any }) {
-    const colorScheme=useColorScheme()
+    const colorScheme=useChangeColorTheme((state)=>state.theme)
+    
     const t = new Date(data.dt_txt)
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return (<View className="flex flex-row justify-between items-center py-2 ">

@@ -7,6 +7,7 @@ export default function Dialog() {
   const setModalVisible = useModal((state) => state.setModalVisible)
   const [value, setValue] = useState<string>('')
   const setCity = useCity((state) => state.addCity)
+  
  
   const onPress=()=>{
     if(value.length>0){

@@ -1,5 +1,6 @@
-import { View, Text, FlatList, Image, StyleSheet, useColorScheme } from "react-native"
+import { View, Text, FlatList, Image, StyleSheet } from "react-native"
 import ForcustItem from "@/components/Forcust";
+import { useChangeColorTheme } from '@/store';
 
 export type WeatherData = {
     weather: {
@@ -11,7 +12,7 @@ export type WeatherData = {
 }
 
 export default function ShowWeather({ weatherData }: { weatherData: WeatherData }) {
-    const colorScheme=useColorScheme()
+    const colorScheme=useChangeColorTheme((state)=>state.theme)
     if (!weatherData.forcust.list.length) return <View><Text>Hellow t</Text></View>
 
     return (<View className=" w-screen flex justify-center ">
