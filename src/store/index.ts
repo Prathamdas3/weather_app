@@ -1,9 +1,10 @@
-import { useColorScheme, Appearance } from "react-native";
+import { Appearance } from "react-native";
 import { create } from 'zustand';
 
 type ThemeStore = {
-    theme: 'dark' | 'light' | string;
+    theme: 'dark' | 'light'|string;
     changeTheme: () => void;
+    setTheme:(theme:string)=>void
 };
 
 type CityStore = {
@@ -16,14 +17,22 @@ type Modal = {
     setModalVisible: () => void
 }
 
-// export const useChangeColorTheme = create<ThemeStore>((set) => ({
-//     theme: useColorScheme() as string,
-//     changeTheme: () => set((state) => {
-//         const newScheme = state.theme === 'dark' ? 'light' : 'dark';
-//         Appearance.setColorScheme(newScheme);
-//         return { theme: newScheme }
-//     })
-// }));
+export const useChangeColorTheme = create<ThemeStore>((set) => ({
+    theme: '',
+    setTheme:(t:string)=>set((state)=>({theme:t})),
+    changeTheme: () => set((state) => {
+
+        if (state.theme == 'dark') {
+            Appearance.setColorScheme('light');
+            return { theme: 'light' }
+        } else {
+            Appearance.setColorScheme('dark');
+            return { theme: 'dark' }
+        }
+
+    }),
+    
+}));
 
 export const useCity = create<CityStore>((set) => ({
     cityName: '',
